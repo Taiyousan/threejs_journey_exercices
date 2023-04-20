@@ -12,7 +12,37 @@ const scene = new THREE.Scene()
 const geometry = new THREE.BoxGeometry(1, 1, 1)
 const material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
 const mesh = new THREE.Mesh(geometry, material)
+mesh.position.x = 0.7
+mesh.position.y = -0.6
+mesh.position.z = 1
 scene.add(mesh)
+console.log(mesh.position.length())
+
+// Axes helper
+const axesHelper = new THREE.AxesHelper()
+scene.add(axesHelper )
+
+// Objects
+const group = new THREE.Group()
+scene.add(group)
+
+const cube1 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({color : 0xff0000})
+)
+const cube2 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({color : 0xff5600})
+)
+const cube3 = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({color : 0xff0840})
+)
+cube2.position.set(1, 1, 0)
+cube3.position.set(-1, -1, 0)
+group.add(cube1)
+group.add(cube2)
+group.add(cube3)
 
 /**
  * Sizes
@@ -37,3 +67,4 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.render(scene, camera)
+
