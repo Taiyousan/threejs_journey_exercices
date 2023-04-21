@@ -1,3 +1,4 @@
 # EXERCICES THREE.JS AVEC LA FORMATION THREE.JS JOURNEY
 
-Ne pas oublier de réinstaller three.js (three.min.js)
+Note :
+    Timecode leçon 11 : 31:23
