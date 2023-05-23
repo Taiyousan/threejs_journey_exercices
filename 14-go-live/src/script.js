@@ -78,14 +78,14 @@ fontLoader.load(
  */
 const sizes = {
     width: window.innerWidth,
-    height: window.innerHeight
+    height: window.innerHeight /2
 }
 
 window.addEventListener('resize', () =>
 {
     // Update sizes
     sizes.width = window.innerWidth
-    sizes.height = window.innerHeight
+    sizes.height = window.innerHeight /2
 
     // Update camera
     camera.aspect = sizes.width / sizes.height

@@ -8,12 +8,20 @@ html,
 body
 {
     overflow: hidden;
+    height: 200vh;
+    background-color: green;
 }
 
 .webgl
 {
-    position: fixed;
+    /* position: fixed;
     top: 0;
-    left: 0;
+    left: 0; */
     outline: none;
+    height: 100vh;
+}
+
+.test {
+    width: 80vw;
+    height: 50vh;
 }
