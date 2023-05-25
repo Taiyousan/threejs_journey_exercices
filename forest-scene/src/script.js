@@ -26,6 +26,8 @@ const grassAoTexture = textureLoader.load('/textures/grass/ao.jpg')
 const grassRoughnessTexture = textureLoader.load('/textures/grass/roughness.jpg')
 const grassDisplacementTexture = textureLoader.load('/textures/grass/displacement.png')
 
+const particleTexture = textureLoader.load('/textures/particles/4.png')
+
 grassColorTexture.repeat.set(8, 8)
 grassAoTexture.repeat.set(8, 8)
 grassNormalTexture.repeat.set(8, 8)
@@ -149,6 +151,38 @@ pointLight.position.set(0, 2.2, 2.7)
 pointLight.castShadow = true
 scene.add(pointLight)
 
+/**
+ * Particles
+ */
+// Geometry
+const particlesGeometry = new THREE.BufferGeometry()
+const count = 5000
+
+const positions = new Float32Array(count * 3)
+
+for(let i = 0; i < count * 3; i++){
+    positions[i] = (Math.random() - 0.5) * 100
+}
+
+particlesGeometry.setAttribute(
+    'position',
+    new THREE.BufferAttribute(positions, 3)
+)
+
+// Material
+const particlesMaterial = new THREE.PointsMaterial({
+    size: 0.5,
+    sizeAttenuation: true,
+    // color: 'gold'
+    alphaMap: particleTexture,
+    transparent: true,
+    alphaTest: 0.001
+})
+
+// Points
+const particles = new THREE.Points(particlesGeometry, particlesMaterial)
+scene.add(particles)
+
 // Sizes
 const sizes = {
     width: window.innerWidth,
@@ -193,6 +227,8 @@ renderer.render(scene, camera)
  */
 const clock = new THREE.Clock()
 
+
+
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
@@ -207,10 +243,14 @@ const tick = () =>
 
 
     // Bouger lumière
-    const angle = elapsedTime * 0.5
-    pointLight.position.x = Math.cos(angle) * 20
+    const angle = elapsedTime * 0.2
+    pointLight.position.x = Math.cos(angle) * 40
     pointLight.position.z = Math.sin(angle) * 20
     pointLight.position.y = Math.sin(elapsedTime * 3) + 10
+
+    // Bouger lucioles
+    particles.rotation.y = elapsedTime * 0.15
+
     // Update controls
     controls.update()
 
