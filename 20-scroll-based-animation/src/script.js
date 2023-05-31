@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import * as dat from 'lil-gui'
 import { FlyControls } from 'three/addons/controls/FlyControls.js';
+import gsap from 'gsap'
 
 /**
  * Debug
@@ -15,6 +16,7 @@ gui
     .addColor(parameters, 'materialColor')
     .onChange(() => {
         material.color.set(parameters.materialColor)
+        particlesMaterial.color.set(parameters.materialColor)
     })
 
 /**
@@ -68,6 +70,37 @@ scene.add(mesh1, mesh2, mesh3)
 const sectionMeshes = [ mesh1, mesh2, mesh3 ]
 
 /**
+ * Particles
+ */
+const particulesCount = 200
+const positions = new Float32Array(particulesCount * 3)
+
+const particlesGeometry = new THREE.BufferGeometry()
+particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+
+const particlesGroup = new THREE.Group()
+scene.add(particlesGroup)
+
+const particlesMaterial = new THREE.PointsMaterial({
+    color: parameters.materialColor,
+    sizeAttenuation: true,
+    size: 0.03
+})
+
+for(let i = 0; i < particulesCount; i++){
+
+    positions[i * 3 + 0] = (Math.random() - 0.5) * 10
+    positions[i * 3 + 1] = objectsDistance * 0.5 - Math.random() * (objectsDistance * sectionMeshes.length)
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 10
+
+    const particles = new THREE.Points(particlesGeometry, particlesMaterial)
+
+    particlesGroup.add(particles)
+}
+
+
+
+/**
  * Lights
  */
 const directionalLight = new THREE.DirectionalLight('#ffffff', 1)
@@ -100,29 +133,58 @@ window.addEventListener('resize', () =>
 /**
  * Camera
  */
+
+// Group
+const cameraGroup = new THREE.Group()
+scene.add(cameraGroup)
+
 // Base camera
 const camera = new THREE.PerspectiveCamera(35, sizes.width / sizes.height, 0.1, 100)
 camera.position.z = 6
 camera.position.y = camera.position.y = (- window.scrollY / sizes.height) * objectsDistance
-scene.add(camera)
+cameraGroup.add(camera)
 
-document.addEventListener('scroll', function scrollCamera(){
-    console.log(window.scrollY)
-    camera.position.y = (- window.scrollY / sizes.height) * objectsDistance
+
+// let oldPosition = null
+// document.addEventListener('mousemove', function moveCamera(event){
+//     console.log('X :'+event.pageX)
+//     console.log('Y :'+event.pageY)
+
+//     camera.position.x = event.pageX / sizes.width * 0.2
+//     if(oldPosition < event.pageY){
+//         camera.position.y = camera.position.y + 0.01
+//     }else{
+//         camera.position.y = camera.position.y - 0.01
+//     }
+//     oldPosition = event.pageY
+// })
+
+const cursor = {}
+cursor.x = 0
+cursor.y = 0
+
+window.addEventListener('mousemove', (event) => {
+    cursor.x = event.clientX / sizes.width - 0.5
+    cursor.y = event.clientY / sizes.height - 0.5
 })
 
-let oldPosition = null
-document.addEventListener('mousemove', function moveCamera(event){
-    console.log('X :'+event.pageX)
-    console.log('Y :'+event.pageY)
+let currentSection = 0
+window.addEventListener('scroll', (event) => {
+    const newSection = Math.round(window.scrollY / sizes.height)
 
-    camera.position.x = event.pageX / sizes.width * 0.2
-    if(oldPosition < event.pageY){
-        camera.position.y = camera.position.y + 0.01
-    }else{
-        camera.position.y = camera.position.y - 0.01
+    if(newSection != currentSection){
+        currentSection = newSection
+
+        gsap.to(sectionMeshes[currentSection].rotation,
+            {
+                duration: 1.5,
+                ease: 'power2.inOut',
+                x: '+=6',
+                y: '+=3'
+            }
+
+        )
     }
-    oldPosition = event.pageY
 })
 
 
@@ -141,16 +203,37 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  * Animate
  */
 const clock = new THREE.Clock()
+let previousTime = 0
 
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
+    const deltaTime = elapsedTime - previousTime
+    previousTime = elapsedTime
+
+
+    /**
+     * Animate camera
+     */
+    // Scroll
+    camera.position.y = (- window.scrollY / sizes.height) * objectsDistance
+
+    // Move mouse
+    const parallaxX = cursor.x * 0.5
+    const parallaxY = - cursor.y * 0.5
+
+    cameraGroup.position.x += (parallaxX - cameraGroup.position.x) * 2 * deltaTime
+    cameraGroup.position.y += (parallaxY - cameraGroup.position.y) * 2 * deltaTime
 
     // Animate
-for(const mesh of sectionMeshes){
-    mesh.rotation.x = elapsedTime * 0.1
-    mesh.rotation.y = elapsedTime * 0.12
-}
+    for(const mesh of sectionMeshes){
+        mesh.rotation.x += deltaTime * 0.1
+        mesh.rotation.y += deltaTime * 0.1
+    }
+
+    particlesGroup.rotation.y = elapsedTime * 0.1
+    particlesGroup.rotation.x = - elapsedTime * 0.1
+    particlesGroup.rotation.z = elapsedTime * 0.1
 
     // Render
     renderer.render(scene, camera)
