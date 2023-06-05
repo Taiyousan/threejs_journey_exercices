@@ -1,0 +1,156 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    font-family: 'Bitter', serif;
+    font-family: 'Roboto', sans-serif;
+}
+
+.webgl{
+    background-color: rgb(91, 112, 131);
+    height: 100vh;
+    width: 60vw;
+}
+
+main {
+    /* background-color: pink; */
+    height: 100vh;
+    width: 40vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Slider ************************************/ 
+.slider {
+    /* background-color: gray; */
+    height: 90%;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.slider div {
+    flex-grow: 4;
+    /* min-height: 15%; */
+    /* outline: 1px solid black; */
+    padding: 1em 1em 1em 0;
+}
+
+.slider > div {
+    border-bottom: #25252516 1px solid;
+}
+
+.slider > div > .partieNom {
+    font-weight: 500;
+    letter-spacing: 2;
+}
+
+/* Label -------------*/
+.label {
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    /* justify-content: center; */
+    position: relative;
+}
+
+.label h1 {
+    letter-spacing: 3;
+}
+
+.label p {
+    font-size: smaller;
+    color: rgb(131, 131, 131);
+    padding-top: 1em;
+}
+
+.label .close {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    background-color: #252525;
+    color:  white;
+    font-size: 1em;
+    padding: 1em;
+}
+
+/* Colors -------------*/
+.colors {
+    display: flex;
+    gap: 1em;
+}
+
+.colorSpot {
+    display: block;
+    height: 2em;
+    width: 2em;
+    border-radius: 50px;
+    background-color: #252525;
+    
+}
+
+/* Infos --------------*/
+
+.infos {
+    display: flex;
+    gap: 0em;
+}
+
+.infos div {
+    /* outline: 1px solid red; */
+}
+
+.infosNoms {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.infosContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    color: rgb(131, 131, 131);
+    font-weight: lighter;
+}
+
+/* Price */
+.price {
+    font-size: 30px;
+    /* padding-left: 1em; */
+}
+
+.cart {
+    display: flex;
+    gap: 1em;
+    /* padding: 0 !important; */
+}
+
+.button {
+    background-color: #252525;
+    color:  white;
+    font-size: 1em;
+    padding: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cartButton {
+    /* width: 70%; */
+    flex-grow: 5;
+}
+
+.favButton {
+    /* width: 30%; */
+    flex-grow: 1;
+}
+
+.favButton img {
+    height: 1em;
+}
+
