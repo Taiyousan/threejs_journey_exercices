@@ -13,6 +13,7 @@ body {
     background-color: rgb(91, 112, 131);
     height: 100vh;
     width: 60vw;
+    transition: 0.2s;
 }
 
 main {
@@ -22,6 +23,7 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: 0.2s;
 }
 
 /* Slider ************************************/ 
@@ -90,7 +92,11 @@ main {
     width: 2em;
     border-radius: 50px;
     background-color: #252525;
-    
+}
+
+.label-color {
+    /* background-color: pink; */
+    margin-top: 1em;
 }
 
 /* Infos --------------*/
@@ -138,19 +144,25 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
+    
 }
 
 .cartButton {
     /* width: 70%; */
-    flex-grow: 5;
+    flex-grow: 1;
 }
 
 .favButton {
     /* width: 30%; */
     flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 !important
 }
 
 .favButton img {
     height: 1em;
+    /* background-color: pink; */
 }
 
