@@ -15,32 +15,32 @@ const parameters = {
   };
   
  
-  const gui = new dat.GUI();
-  const colorControlL = gui.addColor(parameters, 'color').name('JoyCon L');
+//   const gui = new dat.GUI();
+//   const colorControlL = gui.addColor(parameters, 'color').name('JoyCon L');
   
-  // Écouter les modifications de la couleur
-  colorControlL.onChange((value) => {
-    // Convertir la valeur hexadécimale en RGB
-    const r = (value[0]);
-    const g = (value[1]);
-    const b = (value[2]);
-    console.log('gui ' + r, g, b)
+//   // Écouter les modifications de la couleur
+//   colorControlL.onChange((value) => {
+//     // Convertir la valeur hexadécimale en RGB
+//     const r = (value[0]);
+//     const g = (value[1]);
+//     const b = (value[2]);
+//     console.log('gui ' + r, g, b)
 
-    changeColorL(r, g, b)
-  });
+//     changeColorL(r, g, b)
+//   });
 
-  const colorControlR = gui.addColor(parameters, 'color').name('JoyCon R');
+//   const colorControlR = gui.addColor(parameters, 'color').name('JoyCon R');
   
-  // Écouter les modifications de la couleur
-  colorControlR.onChange((value) => {
-    // Convertir la valeur hexadécimale en RGB
-    const r = (value[0]);
-    const g = (value[1]);
-    const b = (value[2]);
-    console.log('gui ' + r, g, b)
+//   // Écouter les modifications de la couleur
+//   colorControlR.onChange((value) => {
+//     // Convertir la valeur hexadécimale en RGB
+//     const r = (value[0]);
+//     const g = (value[1]);
+//     const b = (value[2]);
+//     console.log('gui ' + r, g, b)
 
-    changeColorR(r, g, b)
-  });
+//     changeColorR(r, g, b)
+//   });
 
 /**
  * Base
@@ -81,7 +81,7 @@ let mixer = null
 let switchModel = null
 
 gltfLoader.load(
-    '/models/switch/scene.gltf',
+    '/models/switch/switch2.gltf',
     (gltf) => {
 
         const scale = 0.7
@@ -105,21 +105,34 @@ gltfLoader.load(
     }
 )
 
+
+
 const changeColorL = (r, g, b) => {
     console.log('changeColorL called with RGB:', r, g, b); // Vérifier les valeurs RGB
         switchModel.traverse((child) => {
             if (child.isMesh) {
                 const material = child.material
-                    if (material.name === 'Material.001') {
+                    if (material.name === 'Material.004') {
                         // Accéder au matériau spécifique par son nom
                         material.color.setRGB(r, g, b) // Exemple : rouge
                     }
             }
         })
+ // GROUPE MANETTE R
+const joyconL = switchModel.getObjectByName('joycon_L')
+const joyconR = switchModel.getObjectByName('joycon_R')
+gsap.to(joyconR.position, {duration: 1, z: 0, x: 0, ease: 'power2.inOut', yoyo: false})
+gsap.to(joyconL.position, {duration: 1, z: 1, x: -0.5, ease: 'power2.inOut', yoyo: false})
+
+// position camera
+gsap.to(camera.position, {duration: 1, z: 4.5, x: -3.3, y:-0.75, ease: 'power2.inOut', yoyo: false})
+        
 }
 
+
+
 const changeColorR = (r, g, b) => {
-    console.log('changeColorL called with RGB:', r, g, b); // Vérifier les valeurs RGB
+    // Changer materiau
         switchModel.traverse((child) => {
             if (child.isMesh) {
                 const material = child.material
@@ -129,7 +142,28 @@ const changeColorR = (r, g, b) => {
                     }
             }
         })
+
+        // GROUPE MANETTE R
+const joyconR = switchModel.getObjectByName('joycon_R')
+const joyconL = switchModel.getObjectByName('joycon_L')
+gsap.to(joyconL.position, {duration: 1, z: 0, x: 0, ease: 'power2.inOut', yoyo: false})
+gsap.to(joyconR.position, {duration: 1, z: 1, x: -0.5, ease: 'power2.inOut', yoyo: false})
+
+// position camera
+gsap.to(camera.position, {duration: 1, z: 3.5, x: 4.3, y:0.9, ease: 'power2.inOut', yoyo: false})
 }
+
+const resetJoycon = () => {
+    if(switchModel) {
+        const joyconR = switchModel.getObjectByName('joycon_R')
+        const joyconL = switchModel.getObjectByName('joycon_L')
+        gsap.to(joyconL.position, {duration: 1, z: 0, x: 0, ease: 'power2.inOut', yoyo: false})
+        gsap.to(joyconR.position, {duration: 1, z: 0, x: 0, ease: 'power2.inOut', yoyo: false})
+    }
+}
+canvas.addEventListener('mousedown', resetJoycon)
+canvas.addEventListener('click', function() {
+    console.log(camera.position)})
 
 /**
  * Lights
@@ -169,6 +203,7 @@ scene.add(cameraGroup)
 
 // Base camera
 const camera = new THREE.PerspectiveCamera(35, sizes.width / sizes.height, 0.1, 100)
+console.log(camera.position)
 camera.position.z = 6
 cameraGroup.add(camera)
 
@@ -192,9 +227,9 @@ const tick = () =>
     const deltaTime = elapsedTime - previousTime
     previousTime = elapsedTime
 
-    if(switchModel){
-        switchModel.rotation.y = elapsedTime * 0.01
-    }
+    // if(switchModel){
+    //     switchModel.rotation.y = elapsedTime * 0.01
+    // }
 
   // Update controls
   controls.update()
@@ -213,6 +248,7 @@ tick()
  * INTERFACE
  */
 const buttons = document.querySelectorAll('.joyconL')
+const root = document.querySelector(':root')
 for(const button of buttons){
     const codeRgb = button.dataset.color.split(',')
     
@@ -228,7 +264,8 @@ for(const button of buttons){
     
 
     button.addEventListener('click', () => {
-        canvas.style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.2)`
+        // canvas.style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.2)`
+        root.style.setProperty('--main1', `rgb(${r} ${g} ${b})` );
         buttons.forEach(e => e.style.outline = 'none');
         button.style.outline = '1px solid black'
         changeColorL(r255, g255, b255)
@@ -249,7 +286,7 @@ for(const button of buttonsR){
 
     button.style.backgroundColor = `rgb(${r} ${g} ${b})`
     button.addEventListener('click', () => {
-        document.querySelector('main').style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.2)`
+        document.querySelector('.label').style.color = `rgba(${r}, ${g}, ${b}, 1)`
         buttonsR.forEach(e => e.style.outline = 'none');
         button.style.outline = '1px solid black'
         changeColorR(r255, g255, b255)

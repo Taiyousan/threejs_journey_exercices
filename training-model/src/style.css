@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+:root {
+    --main1: #252525;
+  }
+
 body {
     display: flex;
     font-family: 'Bitter', serif;
@@ -24,6 +28,10 @@ main {
     justify-content: center;
     align-items: center;
     transition: 0.2s;
+}
+
+main  * {
+    transition: 0.1s;
 }
 
 /* Slider ************************************/ 
@@ -74,7 +82,7 @@ main {
     position: absolute;
     top: 1em;
     right: 1em;
-    background-color: #252525;
+    background-color: var(--main1);
     color:  white;
     font-size: 1em;
     padding: 1em;
@@ -91,7 +99,7 @@ main {
     height: 2em;
     width: 2em;
     border-radius: 50px;
-    background-color: #252525;
+    background-color: var(--main1);
 }
 
 .label-color {
@@ -137,7 +145,7 @@ main {
 }
 
 .button {
-    background-color: #252525;
+    background-color: var(--main1);
     color:  white;
     font-size: 1em;
     padding: 1em;
