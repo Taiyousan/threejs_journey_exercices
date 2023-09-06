@@ -127,11 +127,7 @@ export default function Experience() {
     blur={ blur }
 /> */}
 
-      <Stage
-        shadows={{ type: "contact", opacity: 0.2, blur: 3 }}
-        environment="sunset"
-        preset="rembrandt"
-      >
+      <Stage shadows="contact" environment="sunset" preset="rembrandt">
         <mesh castShadow position-y={1} position-x={-2}>
           <sphereGeometry />
           <meshStandardMaterial
